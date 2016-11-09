@@ -7,7 +7,7 @@
     "idb": "^1.2.1",
     "indexeddbshim": "^2.2.1"
   },
-  "description" : "A fluent implementation of IndexDB with easy to use calls.",
+  "description" : "A fluent implementation of IndexedDB with easy to use api calls.",
   "keywords": [
     "indexdb", "database"
   ],
@@ -22,7 +22,7 @@
   "name": "fluent-index-db",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smodav/fluent-index-db.git"
+    "url": "git+https://github.com/smodav/fluent-indexed-db.git"
   },
   "version" : "1.0.0"
 }

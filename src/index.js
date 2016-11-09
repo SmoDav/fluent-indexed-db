@@ -41,7 +41,7 @@ export default class DB {
         });
     }
 
-    all(dbObject, index = null, filter) {
+    all(dbObject, index = null, filter = null) {
         return this.database.then((db) => {
             let transaction = db.transaction(dbObject)
                 .objectStore(dbObject);
@@ -54,7 +54,7 @@ export default class DB {
         });
     }
 
-    allUsingCursor(dbObject, index = null, filter) {
+    allUsingCursor(dbObject, index = null, filter = null) {
         return this.database.then((db) => {
             let transaction = db.transaction(dbObject)
                 .objectStore(dbObject);
@@ -63,7 +63,7 @@ export default class DB {
                 transaction = transaction.index(index);
             }
 
-            return transaction.openCursor();
+            return transaction.openCursor(filter);
         });
     }
 
@@ -81,9 +81,9 @@ export default class DB {
         });
     }
 
-    count(dbObject, key = null) {
+    count(dbObject, filter = null) {
         return this.database.then((db) => {
-            return db.transaction(dbObject).objectStore(dbObject).count(key);
+            return db.transaction(dbObject).objectStore(dbObject).count(filter);
         });
     }
 
@@ -94,4 +94,9 @@ export default class DB {
     static deleteObject(upgradeDB, dbObject) {
         return upgradeDB.deleteObjectStore(dbObject);
     }
+
+    static createIndex(upgradeDB, dbObject, indexName, keyColumn) {
+        return upgradeDB.transaction.objectStore(dbObject).createIndex(indexName, keyColumn);
+    }
 }
+
