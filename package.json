@@ -9,7 +9,7 @@
   },
   "description" : "A fluent implementation of IndexedDB with easy to use api calls.",
   "keywords": [
-    "indexdb", "database"
+    "indexeddb", "database"
   ],
   "license": "MIT",
   "main" : "src",
@@ -19,7 +19,7 @@
       "email" : "smodavprivate@gmail.com"
     }
   ],
-  "name": "fluent-index-db",
+  "name": "fluent-indexed-db",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smodav/fluent-indexed-db.git"
