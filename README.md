@@ -15,7 +15,7 @@ Run `npm install fluent-indexed-db`
 
 Open the database and upgrade as per the needs
 ```javascript
-import DB from '../idb/src/index';
+import DB from 'fluent-indexed-db';
 
 var database = new DB;
 database.open('test-db', 4, function (upgradeDB) {
