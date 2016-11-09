@@ -1,0 +1,28 @@
+{
+  "author": {
+    "name" : "David Mjomba",
+    "email" : "smodavprivate@gmail.com"
+  },
+  "dependencies": {
+    "idb": "^1.2.1",
+    "indexeddbshim": "^2.2.1"
+  },
+  "description" : "A fluent implementation of IndexDB with easy to use calls.",
+  "keywords": [
+    "indexdb", "database"
+  ],
+  "license": "MIT",
+  "main" : "src",
+  "maintainers": [
+    {
+      "name" : "David Mjomba",
+      "email" : "smodavprivate@gmail.com"
+    }
+  ],
+  "name": "fluent-index-db",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smodav/fluent-index-db.git"
+  },
+  "version" : "1.0.0"
+}
