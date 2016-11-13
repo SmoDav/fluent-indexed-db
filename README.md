@@ -155,7 +155,7 @@ dbPromise.then(function (db) {
 
 ##Support
 
-For any inquiries or support please drop a mail at smodavproductions@gmail.com
+For any inquiries or support please drop a mail at smodavprivate@gmail.com
 
 ##License
 
