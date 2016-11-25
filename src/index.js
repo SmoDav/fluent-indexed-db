@@ -1,102 +1,110 @@
+"use strict";
 require('indexeddbshim');
 var connector = require('idb');
 
-export default class DB {
-    open(dbName, version = 1, upgrade = null) {
-        this.database = connector.open(dbName, version, upgrade);
-    }
+(function (){
+    function exp() {
+        this.open = function(dbName, version = 1, upgrade = null) {
+            this.database = connector.open(dbName, version, upgrade);
+        },
 
-    getDatabase() {
-        return this.database;
-    }
+        this.getDatabase = function () {
+            return this.database;
+        },
 
-    get(dbObject, key) {
-        return this.database.then((db) => {
-            return db.transaction(dbObject)
-                .objectStore(dbObject)
-                .get(key);
-        });
-    }
-
-    create(dbObject, key, value) {
-        return this.database.then((db) => {
-            let transaction = db.transaction(dbObject, 'readwrite');
-            transaction.objectStore(dbObject)
-                .put(value, key);
-
-            return transaction.complete;
-        });
-    }
-
-    insert(dbObject, values) {
-        return this.database.then((db) => {
-            let transaction = db.transaction(dbObject, 'readwrite');
-            let store = transaction.objectStore(dbObject);
-
-            values.forEach((value) => {
-                store.put(value);
+        this.get = function (dbObject, key) {
+            return this.database.then((db) => {
+                return db.transaction(dbObject)
+                    .objectStore(dbObject)
+                    .get(key);
             });
+        },
 
-            return transaction.complete;
-        });
+        this.create = function (dbObject, key, value) {
+            return this.database.then((db) => {
+                let transaction = db.transaction(dbObject, 'readwrite');
+                transaction.objectStore(dbObject)
+                    .put(value, key);
+
+                return transaction.complete;
+            });
+        },
+
+        this.insert = function (dbObject, values) {
+            return this.database.then((db) => {
+                let transaction = db.transaction(dbObject, 'readwrite');
+                let store = transaction.objectStore(dbObject);
+
+                values.forEach((value) => {
+                    store.put(value);
+                });
+
+                return transaction.complete;
+            });
+        },
+
+        this.all = function (dbObject, index = null, filter = null) {
+            return this.database.then((db) => {
+                let transaction = db.transaction(dbObject)
+                    .objectStore(dbObject);
+
+                if (index) {
+                    return transaction.index(index).getAll(filter);
+                }
+
+                return transaction.getAll();
+            });
+        },
+
+        this.allUsingCursor = function (dbObject, index = null, filter = null) {
+            return this.database.then((db) => {
+                let transaction = db.transaction(dbObject)
+                    .objectStore(dbObject);
+
+                if (index) {
+                    transaction = transaction.index(index);
+                }
+
+                return transaction.openCursor(filter);
+            });
+        },
+
+        this.clear = function (dbObject) {
+            return this.database.then((db) => {
+                let transaction = db.transaction(dbObject, 'readwrite');
+                transaction.objectStore(dbObject).clear();
+            });
+        },
+
+        this.deleteKey = function (dbObject, key) {
+            return this.database.then((db) => {
+                let transaction = db.transaction(dbObject, 'readwrite');
+                transaction.objectStore(dbObject).delete(key);
+            });
+        },
+
+        this.count = function (dbObject, filter = null) {
+            return this.database.then((db) => {
+                return db.transaction(dbObject).objectStore(dbObject).count(filter);
+            });
+        },
+
+        this.createObject = function (upgradeDB, dbObject, options) {
+            return upgradeDB.createObjectStore(dbObject, options)
+        },
+
+        this.deleteObject = function (upgradeDB, dbObject) {
+            return upgradeDB.deleteObjectStore(dbObject);
+        },
+
+        this.createIndex = function (upgradeDB, dbObject, indexName, keyColumn) {
+            return upgradeDB.transaction.objectStore(dbObject).createIndex(indexName, keyColumn);
+        }
     }
 
-    all(dbObject, index = null, filter = null) {
-        return this.database.then((db) => {
-            let transaction = db.transaction(dbObject)
-                .objectStore(dbObject);
-
-            if (index) {
-                return transaction.index(index).getAll(filter);
-            }
-
-            return transaction.getAll();
-        });
+    if (typeof module !== 'undefined') {
+        module.exports = new exp();
+    } else {
+        self.fluentDb = new exp();
     }
-
-    allUsingCursor(dbObject, index = null, filter = null) {
-        return this.database.then((db) => {
-            let transaction = db.transaction(dbObject)
-                .objectStore(dbObject);
-
-            if (index) {
-                transaction = transaction.index(index);
-            }
-
-            return transaction.openCursor(filter);
-        });
-    }
-
-    clear(dbObject) {
-        return this.database.then((db) => {
-            let transaction = db.transaction(dbObject, 'readwrite');
-            transaction.objectStore(dbObject).clear();
-        });
-    }
-
-    deleteKey(dbObject, key) {
-        return this.database.then((db) => {
-            let transaction = db.transaction(dbObject, 'readwrite');
-            transaction.objectStore(dbObject).delete(key);
-        });
-    }
-
-    count(dbObject, filter = null) {
-        return this.database.then((db) => {
-            return db.transaction(dbObject).objectStore(dbObject).count(filter);
-        });
-    }
-
-    static createObject(upgradeDB, dbObject, options) {
-        return upgradeDB.createObjectStore(dbObject, options)
-    }
-
-    static deleteObject(upgradeDB, dbObject) {
-        return upgradeDB.deleteObjectStore(dbObject);
-    }
-
-    static createIndex(upgradeDB, dbObject, indexName, keyColumn) {
-        return upgradeDB.transaction.objectStore(dbObject).createIndex(indexName, keyColumn);
-    }
-}
-
+}());
