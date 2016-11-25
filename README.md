@@ -15,22 +15,22 @@ Run `npm install fluent-indexed-db`
 
 Open the database and upgrade as per the needs
 ```javascript
-import DB from 'fluent-indexed-db';
+var database = require('fluent-indexed-db');
 
-var database = new DB;
+
 database.open('test-db', 4, function (upgradeDB) {
-    switch(upgradeDB.oldVersion) {
+    switch(upgradedatabase.oldVersion) {
         case 0:
-            let keyValStore = DB.createObject(upgradeDB, 'keyVal');
-            let keyValStore = DB.createObject(upgradeDB, 'vehicles');
-            let keyValStore = DB.createObject(upgradeDB, 'people', { keyPath: 'id' });
+            database.createObject(upgradeDB, 'keyVal');
+            database.createObject(upgradeDB, 'vehicles');
+            database.createObject(upgradeDB, 'people', { keyPath: 'id' });
         case 1:
-            DB.deleteObject(upgradeDB, 'people');
-            DB.createObject(upgradeDB, 'drivers', { keyPath: 'id' });
+            database.deleteObject(upgradeDB, 'people');
+            database.createObject(upgradeDB, 'drivers', { keyPath: 'id' });
         case 2:
-            DB.createIndex(upgradeDB, 'drivers', 'experience', 'years_driving');
+            database.createIndex(upgradeDB, 'drivers', 'experience', 'years_driving');
         case 3:
-            DB.createIndex(upgradeDB, 'vehicles', 'capacity', 'seats');
+            database.createIndex(upgradeDB, 'vehicles', 'capacity', 'seats');
     }
 });
 ```
@@ -145,7 +145,7 @@ and you will receive the current database as a promise.
 var dbPromise = database.getDatabase();
 
 dbPromise.then(function (db) {
-    var transaction = db.transaction('keyVal', 'readwrite');
+    var transaction = database.transaction('keyVal', 'readwrite');
     transaction.objectStore('keyVal')
     .put('bar', 'foo');
     
