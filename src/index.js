@@ -4,7 +4,9 @@ var connector = require('idb');
 
 (function (){
     function exp() {
-        this.open = function(dbName, version = 1, upgrade = null) {
+        this.open = function (dbName, version, upgrade) {
+            version = typeof version == "undefined" ? 1 : version;
+            upgrade = typeof upgrade == "undefined" ? null : upgrade;
             this.database = connector.open(dbName, version, upgrade);
         },
 
@@ -13,7 +15,7 @@ var connector = require('idb');
         },
 
         this.get = function (dbObject, key) {
-            return this.database.then((db) => {
+            return this.database.then(function (db) {
                 return db.transaction(dbObject)
                     .objectStore(dbObject)
                     .get(key);
@@ -21,8 +23,8 @@ var connector = require('idb');
         },
 
         this.create = function (dbObject, key, value) {
-            return this.database.then((db) => {
-                let transaction = db.transaction(dbObject, 'readwrite');
+            return this.database.then(function (db) {
+                var transaction = db.transaction(dbObject, 'readwrite');
                 transaction.objectStore(dbObject)
                     .put(value, key);
 
@@ -31,11 +33,11 @@ var connector = require('idb');
         },
 
         this.insert = function (dbObject, values) {
-            return this.database.then((db) => {
-                let transaction = db.transaction(dbObject, 'readwrite');
-                let store = transaction.objectStore(dbObject);
+            return this.database.then(function (db) {
+                var transaction = db.transaction(dbObject, 'readwrite');
+                var store = transaction.objectStore(dbObject);
 
-                values.forEach((value) => {
+                values.forEach(function (value) {
                     store.put(value);
                 });
 
@@ -43,9 +45,11 @@ var connector = require('idb');
             });
         },
 
-        this.all = function (dbObject, index = null, filter = null) {
-            return this.database.then((db) => {
-                let transaction = db.transaction(dbObject)
+        this.all = function (dbObject, index, filter) {
+            index = typeof index == "undefined" ? null : index;
+            filter = typeof filter == "undefined" ? null : filter;
+            return this.database.then(function (db) {
+                var transaction = db.transaction(dbObject)
                     .objectStore(dbObject);
 
                 if (index) {
@@ -56,9 +60,11 @@ var connector = require('idb');
             });
         },
 
-        this.allUsingCursor = function (dbObject, index = null, filter = null) {
-            return this.database.then((db) => {
-                let transaction = db.transaction(dbObject)
+        this.allUsingCursor = function (dbObject, index, filter) {
+            index = typeof index == "undefined" ? null : index;
+            filter = typeof filter == "undefined" ? null : filter;
+            return this.database.then(function (db) {
+                var transaction = db.transaction(dbObject)
                     .objectStore(dbObject);
 
                 if (index) {
@@ -70,21 +76,22 @@ var connector = require('idb');
         },
 
         this.clear = function (dbObject) {
-            return this.database.then((db) => {
-                let transaction = db.transaction(dbObject, 'readwrite');
+            return this.database.then(function (db) {
+                var transaction = db.transaction(dbObject, 'readwrite');
                 transaction.objectStore(dbObject).clear();
             });
         },
 
         this.deleteKey = function (dbObject, key) {
-            return this.database.then((db) => {
-                let transaction = db.transaction(dbObject, 'readwrite');
+            return this.database.then(function (db) {
+                var transaction = db.transaction(dbObject, 'readwrite');
                 transaction.objectStore(dbObject).delete(key);
             });
         },
 
-        this.count = function (dbObject, filter = null) {
-            return this.database.then((db) => {
+        this.count = function (dbObject, filter) {
+            filter = typeof filter == "undefined" ? null : filter;
+            return this.database.then(function (db) {
                 return db.transaction(dbObject).objectStore(dbObject).count(filter);
             });
         },
@@ -108,3 +115,4 @@ var connector = require('idb');
         self.fluentDb = new exp();
     }
 }());
+
